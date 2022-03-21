@@ -1,4 +1,10 @@
-# ether-yum-frontend
+# ether-yum-ui
+
+A frontend UI for [ether-yum-api](https://github.com/drtz/ether-yum-api)
+
+## Dependencies
+
+An instance of [ether-yum-api](https://github.com/drtz/ether-yum-api) must be running on localhost:4000.
 
 ## Project setup
 ```

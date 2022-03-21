@@ -1,5 +1,5 @@
 {
-  "name": "ether-yum-frontend",
+  "name": "ether-yum-ui",
   "version": "0.1.0",
   "private": true,
   "scripts": {

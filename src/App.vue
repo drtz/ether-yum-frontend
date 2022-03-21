@@ -1,15 +1,16 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <img alt="Ehterum logo" src="https://ethereum.org/static/a183661dd70e0e5c70689a0ec95ef0ba/cdbe4/eth-diamond-purple.webp">
+  <h1>ether-yum-ui</h1>
+  <ContractSearch />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ContractSearch from './components/ContractSearch.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    ContractSearch
   }
 }
 </script>
