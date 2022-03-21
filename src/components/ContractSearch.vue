@@ -1,46 +1,46 @@
 <template>
     <div>
-        <input v-model="address" @input="reset" v-on:keyup.enter="search" placeholder="contract address" />
+        <input v-model="state.address" @input="reset" v-on:keyup.enter="search" placeholder="contract address" />&nbsp;
         <button @click="search">Search Contracts</button>
     </div>
-    <div v-if="isLoading">
+    <div v-if="state.isLoading">
         <span>Loading...</span>
     </div>
-    <div v-if="timestamp != null">
-        <label>Contract Timestamp:</label>
-        <span>{{timestamp}}</span>
+    <div v-if="state.timestamp != null">
+        <label>Contract Create at Timestamp: </label>
+        <span>{{state.timestamp}} ({{new Date(state.timestamp*1000)}})</span>
     </div>
-    <ul v-if="errors != null">
-        <li v-for="error in errors" :key="error.message">
-            <label>Error:</label>
+    <ul v-if="state.errors != null">
+        <li v-for="error in state.errors" :key="error.message">
+            <label>Error: </label>
             <span>{{error.message}}</span>
         </li>
     </ul>
 </template>
 
 <script>
-export default {
+import { reactive, defineComponent } from "vue";
+export default defineComponent({
   name: 'ContractSearch',
-  data() {
-      return {
-          address: '',
-          timestamp: null,
-          isLoading: false,
-          errors: null,
-      }
-  },
-  methods: {
-    reset() {
+  setup() {
+    const state = reactive({
+        address: '',
+        timestamp: null,
+        isLoading: false,
+        errors: null,
+    });
+
+    function reset() {
         this.isLoading = false;
         this.errors = null;
-    },
+    }
 
-    async search() {
-        this.errors = null;
-        this.isLoading = true;
+    async function search() {
+        state.errors = null;
+        state.isLoading = true;
 
         // Poor-man's GraphQL query. Using Apollo here would be much cleaner.
-        const body = { "query":`query { contract(address: "${this.address}") { createdInTransaction { timestamp } } }` };
+        const body = { "query":`query { contract(address: "${state.address}") { createdInTransaction { timestamp } } }` };
         const response = await fetch('http://localhost:4000', {
             method: 'POST',
             headers: {
@@ -49,20 +49,22 @@ export default {
             body: JSON.stringify(body),
         });
 
-        this.isLoading = false;
+        state.isLoading = false;
 
         const responseBody = await response.json();
 
         if (responseBody.errors) {
-            this.errors = responseBody.errors;
+            state.errors = responseBody.errors;
         }
 
         if (responseBody.data && responseBody.data.contract) {
-            this.timestamp = responseBody.data.contract.createdInTransaction.timestamp;
+            state.timestamp = responseBody.data.contract.createdInTransaction.timestamp;
         }
     }
+
+    return { state, reset, search };
   }
-}
+});
 </script>
 
 
